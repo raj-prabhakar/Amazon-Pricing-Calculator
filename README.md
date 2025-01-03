@@ -1,9 +1,7 @@
-# Amazon Marketplace Fee Calculator API
-
-A robust Node.js backend API for calculating various Amazon marketplace fees based on product specifications and shipping details. This API integrates with Google Sheets to maintain dynamic fee structures and provides accurate calculations for referral fees, weight handling charges, closing fees, and pick & pack fees.
+# Amazon Marketplace Fee Calculator
+A full-stack application for calculating various Amazon marketplace fees based on product specifications and shipping details. The frontend provides an intuitive interface for fee calculations while the backend API integrates with Google Sheets to maintain dynamic fee structures.
 
 ## Features
-
 - **Dynamic Fee Structure**: Integrates with Google Sheets for real-time fee updates
 - **Comprehensive Fee Calculations**:
   - Referral Fee calculation based on product category
@@ -15,19 +13,28 @@ A robust Node.js backend API for calculating various Amazon marketplace fees bas
 - **Input Validation**: Comprehensive input validation using Joi
 - **Logging**: Detailed logging system using Winston
 
-## Prerequisites
+## Project Structure
+```
+project-root/
+  ├── frontend/         # React frontend application
+  │   ├── src/
+  │   └── package.json
+  └── backend/          # Node.js backend API
+      ├── src/
+      └── package.json
+```
 
+## Prerequisites
 - Node.js (v14 or higher)
 - npm
 - Google Cloud Project with Sheets API enabled
 - Google Service Account credentials
 
-## Setup
+## Frontend Setup
 
-1. **Clone the repository**
+1. **Navigate to frontend directory**
 ```bash
-git clone [repository-url]
-cd pricing-calculator-backend
+cd frontend
 ```
 
 2. **Install dependencies**
@@ -36,8 +43,31 @@ npm install
 ```
 
 3. **Environment Setup**
+Create a `.env` file in the frontend directory:
+```env
+VITE_API_URL=http://localhost:3000/api/v1
+```
 
-Create a `.env` file in the root directory with the following variables:
+4. **Run development server**
+```bash
+npm run dev
+```
+The frontend will be available at `http://localhost:5173`
+
+## Backend Setup
+
+1. **Navigate to backend directory**
+```bash
+cd backend
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Environment Setup**
+Create a `.env` file in the backend directory:
 ```env
 PORT=3000
 GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
@@ -51,12 +81,31 @@ NODE_ENV=development
 - Download the credentials JSON file and save it securely
 - Update the GOOGLE_APPLICATION_CREDENTIALS path in .env
 
-## Running the Application
-
-### Development Mode
+5. **Run development server**
 ```bash
 npm run dev
 ```
+The backend API will be available at `http://localhost:3000`
+
+## Running the Full Application
+
+1. **Start Backend Server**
+```bash
+# In the backend directory
+cd backend
+npm run dev
+```
+
+2. **Start Frontend Development Server**
+```bash
+# In the frontend directory (new terminal)
+cd frontend
+npm run dev
+```
+
+3. **Access the Application**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
 
 ## API Endpoints
 
@@ -71,10 +120,10 @@ POST /api/v1/calculate-fees
   "category": "string",
   "sellingPrice": number,
   "weight": number,
-  "shippingMode": "Easy Ship (Standard)" | "FBA",
-  "serviceLevel": "Standard" | "Express",
+  "shippingMode": "Easy Ship (Standard)" | "FBA Normal" | "FBA Exception" | "Self Ship" | "Seller Flex",
+  "serviceLevel": "Premium" | "Advanced" | "Standard" | "Basic",
   "productSize": "Standard" | "Heavy & Bulky",
-  "location": "Local" | "National"
+  "location": "Local" | "Regional" | "National" | "IXD"
 }
 ```
 
@@ -94,7 +143,6 @@ POST /api/v1/calculate-fees
 ```
 
 ## Fee Structure
-
 The fee calculation is based on the following components:
 
 1. **Referral Fee**:
@@ -114,18 +162,3 @@ The fee calculation is based on the following components:
    - Varies by product size
    - Different rates for Standard and Heavy & Bulky items
 
-## Error Handling
-
-The API implements comprehensive error handling:
-- Input validation errors
-- Google Sheets API errors
-- Calculation errors
-- Invalid fee structure errors
-
-All errors return a consistent format:
-```json
-{
-  "success": false,
-  "error": "Error message"
-}
-```
